@@ -98,7 +98,7 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 script {
-                    sh "/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects terraform init"
+                    sh "/opt/homebrew/bin/terraform init"
                 }
             }
         }
