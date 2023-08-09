@@ -24,25 +24,26 @@ pipeline {
         }
 
         stage('Terraform Init') {
-            withCredentials([
-                string(credentialsId: 'azure-client-id', variable: 'AZURE_CLIENT_ID'),
-                string(credentialsId: 'azure-client-secret', variable: 'AZURE_CLIENT_SECRET'),
-                string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID')
-                 ]) {
-                  script {
-                    def azureClientSecret = credentials('azure-client-secret')
-                     withAzureCLI(credentialsType: 'servicePrincipal', servicePrincipal: "${AZURE_CLIENT_ID}:${azureClientSecret}:${AZURE_TENANT_ID}:${AZURE_SUBSCRIPTION_ID}") {
-                        sh "terraform ${params.TERRAFORM_INIT_CMD}"
+            when {
+                expression { params.TERRAFORM_COMMAND == 'init' }
+            }
+            steps {
+                script {
+                    withCredentials([
+                        string(credentialsId: 'azure-client-id', variable: 'AZURE_CLIENT_ID'),
+                        string(credentialsId: 'azure-client-secret', variable: 'AZURE_CLIENT_SECRET'),
+                        string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID')
+                    ]) {
+                        def azureClientSecret = credentials('azure-client-secret')
+                        sh """
+                            az login --service-principal --username \$AZURE_CLIENT_ID --password \$AZURE_CLIENT_SECRET --tenant \$AZURE_TENANT_ID
+                            terraform ${params.TERRAFORM_COMMAND}
+                            az logout
+                        """
                     }
-
                 }
             }
         }
 
-
-
-
-
-        // Add more stages as needed
     }
 }
