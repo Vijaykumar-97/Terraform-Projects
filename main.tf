@@ -153,25 +153,4 @@ resource "azurerm_linux_virtual_machine" "linuxvm" {
   tags = {
     environment = "production"
   }
-
-  variable "subscription-id" {
-  description = "Azure Subscription ID"
-  type        = string
-  }
-
-  variable "client-id" {
-  description = "Azure client ID"
-  type        = string
-  }
-
-  variable "secret" {
-  description = "Azure secret "
-  type        = string
-  }
-
-  variable "tenant-id" {
-  description = "Azure tenant ID"
-  type        = string
-  }
-
 }

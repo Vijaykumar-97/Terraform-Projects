@@ -6,7 +6,4 @@ public_ip_name              = "publicip019"
 network_security_group_name = "nsgprod019"
 network_interface_name      = "nicprod019"
 linux_virtual_machine_name  = "linuxvm020"
-subscription-id             = "e4c32755-3f69-43a0-be4b-e067634c6a89"
-client_id					= "2288fd3b-cf14-4b8b-9bbc-75ec1394af0e"
-client_secret				= "B1o8Q~eCUbb-I_ahC3~KkNfcq_UdfTZuHM6lGaMw"
-tenant_id					= "41f88ecb-ca63-404d-97dd-ab0a169fd138"
+
