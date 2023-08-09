@@ -97,6 +97,10 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
+                environment {
+                    PATH = "${PATH}:/opt/homebrew/bin/az"
+                    // Other environment variables...
+                }
                 script {
                     sh "/opt/homebrew/bin/terraform init"
                 }
