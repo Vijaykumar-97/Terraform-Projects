@@ -98,7 +98,7 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 script {
-                    sh "/opt/homebrew/bin/terraform init"
+                    sh "/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects terraform init"
                 }
             }
         }
@@ -106,7 +106,7 @@ pipeline {
         stage('Terraform Command') {
             steps {
                 script {
-                    sh "/opt/homebrew/bin/terraform ${params.TERRAFORM_ACTION}"
+                    sh "/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects terraform ${params.TERRAFORM_ACTION}"
                 }
             }
         }
