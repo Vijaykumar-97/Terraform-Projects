@@ -1,59 +1,49 @@
 pipeline {
     agent any
 
-    environment {
-        AZURE_CLIENT_ID = credentials('azure-client-id')
-        AZURE_CLIENT_SECRET = credentials('azure-client-secret')
-        AZURE_TENANT_ID = credentials('azure-tenant-id')
-        AZURE_SUBSCRIPTION_ID = 'e4c32755-3f69-43a0-be4b-e067634c6a89'
+    parameters {
+        string(name: 'TERRAFORM_INIT_CMD', defaultValue: 'init', description: 'Terraform Init Command')
+        string(name: 'AZURE_SUBSCRIPTION_ID', description: 'Azure Subscription ID')
     }
 
+    environment {
+        GITHUB_PAT = credentials('Github_secret') // Replace with your credentials ID
+    }
+
+
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git 'https://github.com/Vijaykumar-97/Terraform-Projects.git'
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/main']],
+                          userRemoteConfigs: [[url: 'https://github.com/Vijaykumar-97/Terraform-Projects.git']],
+                          credentialsId: "${GITHUB_PAT}"])
             }
         }
+
         stage('Terraform Init') {
             steps {
                 script {
-                    echo "terraform action from the parameter is --> ${action}"
-                    withAzureCLI(credentialsType: 'servicePrincipal', servicePrincipal: "${AZURE_CLIENT_ID}:${AZURE_CLIENT_SECRET}:${AZURE_TENANT_ID}:${AZURE_SUBSCRIPTION_ID}") {
-                        sh ("terraform ${action}")
-                    }
-                }
-            }
-        }
-        stage('Terraform Plan') {
-            steps {
-                script {
-                    echo "terraform action from the parameter is --> ${action}"
-                    withAzureCLI(credentialsType: 'servicePrincipal', servicePrincipal: "${AZURE_CLIENT_ID}:${AZURE_CLIENT_SECRET}:${AZURE_TENANT_ID}:${AZURE_SUBSCRIPTION_ID}") {
-                        sh ("terraform ${action}")
-                    }
-                }
-            }
-        }
-        stage('Terraform Apply') {
-            steps {
-                script {
-                    echo "terraform action from the parameter is --> ${action}"
-                    withAzureCLI(credentialsType: 'servicePrincipal', servicePrincipal: "${AZURE_CLIENT_ID}:${AZURE_CLIENT_SECRET}:${AZURE_TENANT_ID}:${AZURE_SUBSCRIPTION_ID}") {
-                        sh ("terraform ${action} -auto-approve")
-                    }
-                }
-            }
-        }
-        stage('Terraform Destroy') {
-            steps {
-                script {
-                    echo "terraform action from the parameter is --> ${action}"
-                    withAzureCLI(credentialsType: 'servicePrincipal', servicePrincipal: "${AZURE_CLIENT_ID}:${AZURE_CLIENT_SECRET}:${AZURE_TENANT_ID}:${AZURE_SUBSCRIPTION_ID}") {
-                        sh ("terraform ${action} -auto-approve")
+                    // Load Azure credentials using withCredentials
+                    withCredentials([
+                        string(credentialsId: 'azure-client-id', variable: 'AZURE_CLIENT_ID'),
+                        string(credentialsId: 'azure-client-secret', variable: 'AZURE_CLIENT_SECRET'),
+                        string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID')
+                    ]) {
+                        // Now you can use the variables AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID
+                        sh "echo Azure Client ID: $AZURE_CLIENT_ID"
+                        sh "echo Azure Client Secret: $AZURE_CLIENT_SECRET"
+                        sh "echo Azure Tenant ID: $AZURE_TENANT_ID"
+
+                        // Use the credentials and subscription ID in your Azure CLI commands
+                        withAzureCLI(credentialsType: 'servicePrincipal', servicePrincipal: "${AZURE_CLIENT_ID}:${AZURE_CLIENT_SECRET}:${AZURE_TENANT_ID}:${AZURE_SUBSCRIPTION_ID}") {
+                            sh "terraform ${TERRAFORM_INIT_CMD}"
+                        }
                     }
                 }
             }
         }
 
+        // Add more stages as needed
     }
 }
