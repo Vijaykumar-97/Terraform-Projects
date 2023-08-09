@@ -97,6 +97,7 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
+                dir('/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects')
                 script {
                     sh "/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects terraform init"
                 }
@@ -104,14 +105,16 @@ pipeline {
         }
         
         stage('Terraform Command') {
+            dir('/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects')
             steps {
                 script {
-                    sh "/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects terraform ${params.TERRAFORM_ACTION}"
+                    sh "/opt/homebrew/bin/terraform ${params.TERRAFORM_ACTION}"
                 }
             }
         }
 
         stage('Azure Logout') {
+            dir('/Users/vijay/Desktop/DevOps/VM/ansible/Terraform-Projects')
             steps {
                 script {
                     sh "/opt/homebrew/bin/az logout"
