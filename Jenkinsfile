@@ -10,6 +10,7 @@ pipeline {
     AZURE_CLIENT_ID = credentials('azure-client-id')
     AZURE_CLIENT_SECRET = credentials('secret_value')
     AZURE_TENANT_ID = credentials('azure-tenant-id')
+    PATH = "${PATH}:/opt/homebrew/bin/az"
     // Other environment variables...
     }
 
