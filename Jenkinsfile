@@ -34,7 +34,7 @@ pipeline {
                         def azureClientSecret = credentials('secret_value')
                         sh """
                             /opt/homebrew/bin/az login --service-principal --username \$AZURE_CLIENT_ID --password \$AZURE_CLIENT_SECRET --tenant \$AZURE_TENANT_ID
-                            terraform ${params.TERRAFORM_ACTION}
+                            /opt/homebrew/bin/terraform ${params.TERRAFORM_ACTION}
                             az logout
                         """
                     }
