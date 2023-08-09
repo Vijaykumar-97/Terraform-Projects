@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        choice(name: 'TERRAFORM_ACTION', choices: ['init', 'plan', 'apply', 'destroy'], description: 'Select Terraform action')
+        choice(name: 'TERRAFORM_ACTION', choices: ['plan', 'apply', 'destroy'], description: 'Select Terraform action')
         string(name: 'AZURE_SUBSCRIPTION_ID', description: 'Azure Subscription ID')
     }
 
@@ -24,6 +24,24 @@ pipeline {
         }
 
         stage('Terraform Init') {
+            steps {
+                script {
+                    withCredentials([
+                        string(credentialsId: 'azure-client-id', variable: 'AZURE_CLIENT_ID'),
+                        string(credentialsId: 'secret_value', variable: 'AZURE_CLIENT_SECRET'),
+                        string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID')
+                    ]) {
+                        def azureClientSecret = credentials('secret_value')
+                        sh """
+                            /opt/homebrew/bin/az login --service-principal --username \$AZURE_CLIENT_ID --password \$AZURE_CLIENT_SECRET --tenant \$AZURE_TENANT_ID
+                            /opt/homebrew/bin/terraform init
+                            /opt/homebrew/bin/az logout
+                        """
+                    }
+                }
+            }
+        }
+        stage('Terraform Command') {
             steps {
                 script {
                     withCredentials([
