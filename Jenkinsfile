@@ -6,18 +6,13 @@ pipeline {
         string(name: 'AZURE_SUBSCRIPTION_ID', description: 'Azure Subscription ID')
     }
 
-    environment {
-        GITHUB_PAT = credentials('Github_secret') // Replace with your credentials ID
-    }
-
-
     stages {
         stage('Checkout Code') {
             steps {
                 checkout([$class: 'GitSCM',
                           branches: [[name: '*/main']],
                           userRemoteConfigs: [[url: 'https://github.com/Vijaykumar-97/Terraform-Projects.git']],
-                          credentialsId: "${GITHUB_PAT}"])
+                          credentialsId: 'Github_secret'])
             }
         }
 
