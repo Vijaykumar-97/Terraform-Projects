@@ -134,7 +134,7 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM',
                           branches: [[name: '*/main']],
-                          userRemoteConfigs: [[url: 'https://github.com/Vijaykumar-97/LinuxVM_azure.git']],
+                          userRemoteConfigs: [[url: 'https://github.com/Vijaykumar-97/Terraform-Projects.git']],
                           credentialsId: 'Github_secret'])
             }
         }
