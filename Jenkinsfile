@@ -148,7 +148,7 @@ pipeline {
                                      string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID')]) {
                         sh """
                             /opt/homebrew/bin/az login --service-principal --username \$AZURE_CLIENT_ID --password \$AZURE_CLIENT_SECRET --tenant \$AZURE_TENANT_ID
-                            /opt/homebrew/bin/terraform init
+                            terraform init
                             /opt/homebrew/bin/az logout
                         """
                     }
@@ -167,7 +167,7 @@ pipeline {
                                      string(credentialsId: 'azure-tenant-id', variable: 'AZURE_TENANT_ID')]) {
                         sh """
                             /opt/homebrew/bin/az login --service-principal --username \$AZURE_CLIENT_ID --password \$AZURE_CLIENT_SECRET --tenant \$AZURE_TENANT_ID
-                            /opt/homebrew/bin/terraform ${terraformAction}
+                            terraform ${terraformAction}
                             /opt/homebrew/bin/az logout
                         """
                     }
